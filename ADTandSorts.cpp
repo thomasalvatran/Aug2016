@@ -13,6 +13,7 @@
 #include <queue> //queue for radixsortSTL
 #include <stack>
 #include <deque>
+#include <iomanip> //setw
 using namespace std;
 
 int rand_int(int a, int b)
@@ -88,13 +89,16 @@ int partition(int a[], int l, int r)
 //        if (l < r)
 //            swap (a, l, r);
 //    }
-    while (l < r && a[l] < p)
-        l++;
-    while (l < r && a[r] > p)
-        r--;
-    if (l < r)
-        swap (a, l, r);
-    return r;
+    while (l < r)
+    {
+        while (a[l] < p)
+            l++;
+        while (a[r] > p)
+            r--;
+        if (l < r)
+            swap(a, l, r);
+    }
+        return r;
 }
 
 void quickSort(int a[],  int l, int r)
@@ -253,7 +257,7 @@ void isPrime(int n)
     }
     cout << (flag == 0 ? "Prime" : "Not Prime") << endl;
 }
-//fund nth prime number N
+//find nth prime number N
 //    1 2   3   4th prime
 //0 1 2 3 4 5 6 7
 void findPrime(int n)
@@ -345,7 +349,7 @@ using namespace std;
 
 #define SIZ 5
 const int SIZE = 5;
-int Array[SIZE];
+int Array[SIZE];  //array is ambiguous
 
 int rear = 0, front = 0;
 
@@ -378,8 +382,8 @@ void dequeueArray()
     // front = front++;
     // front %= SIZE;
                 // Tail = Queue->Tail++;
-                //Queue->Tail = (Queue->Tail + 1) % MAX_LEN_OF_MLME_QUEUE;
                 // Queue->Tail %= MAX_LEN_OF_MLME_QUEUE;  // Queue->Tail = (tail + 1) % MAX_LEN_OF_MLINE_QUEUE
+                //Queue->Tail = (Queue->Tail + 1) % MAX_LEN_OF_MLME_QUEUE;
                 // Queue->Num++;
 }
 #define RING_SIZE SIZE //this is not ring buffer(no circulate)
@@ -445,7 +449,7 @@ void dequeueLinkedList()
     else
         frontLL = frontLL->next;
 }
-void printLinkedList()
+void printLinkedList() // front ->>next ->next.......rear 
 {
     Node *temp = frontLL;
     while (temp != NULL)
@@ -484,12 +488,12 @@ void sortLinkedList()
             }
             temp = temp->next;
           }
-          temp1 = temp;  //temp = 0 now is temp don't search again
+          temp1 = temp;  //temp = 0 now is temp = temp->next don't search again
     } while(isSwapped);
     // printLinkedList();
 }
 
-/***********************Queue ADT Tree *****************************/
+/***********************Queue ADT BST in LinkedList *****************************/
 struct BstNode
 {
     bool visited = false;
@@ -529,13 +533,17 @@ BstNode* dequeueMinTree(BstNode* root) //smallest in balance tree
     }
     else if (temp->left != 0)         //has left
     {
-        delete temp->left;          
-        prev->left->left = 0;
+        // delete temp->left;          
+        // prev->left->left = 0;
+         prev->left = temp->left;
+        delete temp;   
     }
     else if (temp->right != 0)         //has right
     {
-        delete temp->right;
-        prev->left->right = 0;
+        // delete temp->right;
+        // prev->left->right = 0;
+         prev->left = temp->right;
+        delete temp;
     }
     return root;
 }
@@ -671,6 +679,7 @@ void printTree(BstNode *root)
 //http://articles.leetcode.com/binary-search-tree-in-order-traversal/
 void in_order_traversal_iterative(BstNode *root)
 {
+    cout << "in_order_traversal_iterative" << endl;
     stack<BstNode*> s;
     s.push(root);
     if (!s.empty())
@@ -1040,17 +1049,20 @@ int main()
     srand(time(0));
     for (int i = 0; i < 3; i++)
         a[i] = rand_int(1, 10);
-    insertSort(a, 4);
+    radixSortSTL(a, 4);
+    // insertSort(a, 4);
     // print(a, 4);
-    mergeSort(a, 0, 3);   //array pass by ref therefore change outside effect inside
+    //mergeSort(a, 0, 3);   //array pass by ref therefore change outside effect inside
     print(a, 4);
     cout <<  "***********Queue Array ***********" << endl;
     enqueueArray(12);
     enqueueArray(4);
-    enqueueArray(5);
+    // enqueueArray(5);
+    enqueueArray(15);
     enqueueArray(15);
     printArray();
     cout <<  "***********Queue Linked List ***********" << endl;
+    enqueueLinkedList(22);
     enqueueLinkedList(22);
     enqueueLinkedList(23);
     enqueueLinkedList(29);
@@ -1076,7 +1088,7 @@ int main()
         }
     }while (isSwapped);
     printLinkedList();
-    cout <<  "***********Queue Tree ***********" << endl;
+    cout <<  "***********Queue Tree as LinkedList***********" << endl;
     insertNodeGlobal(100); //Method 0: global no return
     insertNodeGlobal(90);
     insertNodeGlobal(110);
@@ -1089,18 +1101,21 @@ int main()
     root = insertNodeRecursive(root, 999);
     root = enqueueTree(root, 55);
     root = enqueueTree(root, 555);
+    root = enqueueTree(root, 555);
     removeNode(root, 88);
-    printTree(root);
-    printf("\n");
-    dequeueMinTree(root);
-    dequeueMinTree(root);
-    printTree(root);
-    printf("\n");
-    dequeueMaxTree(root);
     printTree(root);
     printf("\n");
     printf("Max is %d\n", findMax(root));
     printf("Min is %d\n", findMin(root));
+    dequeueMinTree(root);
+    dequeueMaxTree(root);
+    printTree(root);
+    printf("\n");
+    printTreeStack(root);
+    printf("\n");
+    dequeueMaxTree(root);
+    printTree(root);
+    printf("\n");
 //    root = deleteTree(root);
 //    printTree(root);
 //    printf("\n");
@@ -1109,6 +1124,7 @@ int main()
     printf("\n");
     printf("Vector..\n");
     treetoBST(root);
+    printf("%s", "Tree Sort: " );
     for_each(vec.begin(), vec.end(), [](int i){
         printf("%d ", i);
     });
@@ -1244,7 +1260,7 @@ int main()
         cout << stacks.top() << " ";
         stacks.pop();
     }
-    cout << " stacks(not retain)" << endl;
+    cout << " stacks(not retain order but reverse order)" << endl;
     
     while(vectors.size() != 0)
     {
@@ -1256,6 +1272,13 @@ int main()
     for (int n: deques)
         cout << n << " ";
     cout << " deques(can retain not retain) can work queues or stacks" << endl;
+
+    while(deques.size() != 0)
+    {
+        cout << deques.back() << " ";
+        deques.pop_back();
+    }
+    cout << " deques pop_back (not retain order) " << endl;
 
     while(queues.size() != 0)
     {
@@ -1269,7 +1292,9 @@ int main()
         cout << lists.front() << " "; 
         lists.pop_front();
     }
-    cout << " lists(retain order)" << endl;
+    cout << " lists retain order put in but it is a linkedlist " << endl;
+
+    cout << setw(80) << "no std::tree C++ STL does not provide any tree container only in Java !" << endl;
 
 }
 
