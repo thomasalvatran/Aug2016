@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <algorithm>
+#include <iomanip> //setw for space
 
 using namespace std;
 // const int t = 100;
@@ -78,9 +79,9 @@ graph::graph(int ver) : v(ver)
 // }
 graph::~graph()
 {
-  // for (int i = 0; i < v; ++i)
-  //   delete [] adj[i];
-  // delete [] adj;
+  for (int i = 0; i < v; ++i)
+    delete [] adj[i];          //delete row[] the col[] will be deleted as well
+  delete [] adj;
   cout << "Dtor delete adj create in heap using new adj = new edge*[v] " << endl;
 }
 // void graph:: vertices ( int ver )
@@ -157,10 +158,10 @@ void printPath(vector<int> shortest, int j)
 void printSolution(int src, vector<int> dist, int n, vector<int> shortest)
 {
   // int src = 1;
-  printf("Vertex\t\t\t\t\t\t           Distance\t\t\tPath");
+  printf("Vertex\t\t\t\t           Distance\t\tPath");
   for (int i = 1; i < n; i++)
   {
-    printf("\n%d(%s) -> %d(%s)  \t\t\t\t %d\t\t\t\t%d(%s) ", src, vN[src], i, vN[i], dist[i], src, vN[src]);
+    printf("\n%d(%s) -> %d (%-11s)\t%d\t\t\t%d(%s) ", src, vN[src], i, vN[i], dist[i], src, vN[src]);
     printPath(shortest, i);
   }
   printf("\n");
@@ -209,9 +210,6 @@ int graph::dijkstra(int A, int B, graph::edge **adj)
 int main()
 {
   graph t(8);
- 
-  
-  cout << vN[Phoenix] << endl;
 
   //t.vertices(3);
   t.add(4,1,2,"Pendleton", "Phoenix");
@@ -260,3 +258,39 @@ int main()
 
   return 0;
 }
+// Vertex: 0 Vertex: 1 Distance: 2->Pierre - Pendleton
+// Vertex: 1 Vertex: 2 Distance: 4->Pendleton - Phoenix
+// Vertex: 1 Vertex: 3 Distance: 8->Pendleton - Pueblo
+// Vertex: 2 Vertex: 3 Distance: 3->Phoenix - Pueblo
+// Vertex: 2 Vertex: 4 Distance: 4->Phoenix - Peoria
+// Vertex: 2 Vertex: 5 Distance: 10->Phoenix - Pittsburgh
+// Vertex: 3 Vertex: 0 Distance: 3->Pueblo - Pierre
+// Vertex: 4 Vertex: 3 Distance: 3->Peoria - Pueblo
+// Vertex: 4 Vertex: 5 Distance: 5->Peoria - Pittsburgh
+// Vertex: 5 Vertex: 6 Distance: 4->Pittsburgh - Princeton
+// Vertex: 6 Vertex: 5 Distance: 2->Princeton - Pittsburgh
+// Vertex: 6 Vertex: 7 Distance: 5->Pensacola - Princeton
+// Vertex: 7 Vertex: 2 Distance: 5->Pensacola - Phoenix
+// col  :  0  1  2  3  4  5  6  7  8
+// row 0 : 0  2  0  0  0  0  0  0  
+// row 1 : 0  0  4  8  0  0  0  0  
+// row 2 : 0  0  0  3  4  10  0  0  
+// row 3 : 3  0  0  0  0  0  0  0  
+// row 4 : 0  0  0  3  0  5  0  0  
+// row 5 : 0  0  0  0  0  0  4  0  
+// row 6 : 0  0  0  0  0  2  0  5  
+// row 7 : 0  0  5  0  0  0  0  0  
+// n = 8 from 0(Pierre) to 6(Pensacola)
+// 0 2 6 9 10 15 19 24   dist 
+// -1 0 1 2 2 4 5 6    shortest vertex 
+// Vertex                   Distance   Path
+// 0(Pierre) -> 1 (Pendleton  )  2     0(Pierre) 1(Pendleton) 
+// 0(Pierre) -> 2 (Phoenix    )  6     0(Pierre) 1(Pendleton) 2(Phoenix) 
+// 0(Pierre) -> 3 (Pueblo     )  9     0(Pierre) 1(Pendleton) 2(Phoenix) 3(Pueblo) 
+// 0(Pierre) -> 4 (Peoria     )  10    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 
+// 0(Pierre) -> 5 (Pittsburgh )  15    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 
+// 0(Pierre) -> 6 (Pensacola  )  19    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 6(Pensacola) 
+// 0(Pierre) -> 7 (Princeton  )  24    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 6(Pensacola) 7(Princeton) 
+// shortest path 19
+// Dtor delete adj create in heap using new adj = new edge*[v] 
+// [Finished in 1.0s]
