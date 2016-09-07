@@ -12,9 +12,9 @@ using namespace std;
  enum vName { Pierre, Pendleton, Phoenix, Pueblo, Peoria, Pittsburgh, Pensacola, Princeton };
             /* 0,         1,         2.      3,       4.      5,         6,           7,        8 */
  const char *vN[] = { "Pierre", "Pendleton", "Phoenix", "Pueblo", "Peoria", "Pittsburgh", "Pensacola", "Princeton" };
+
 class graph 
 {
-public:
   struct edge
   {
    int distance;
@@ -22,6 +22,7 @@ public:
    bool connection;
   }_edge;
 
+public:
  const int v;
  // struct edge **adj; //cannot adj[v][v] using ctor to initialize this 2 dimensions array 
  // vector<graph::edge> adj(3)(3);
