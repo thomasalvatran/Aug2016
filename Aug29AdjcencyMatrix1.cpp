@@ -1,4 +1,4 @@
-//http://www.dreamincode.net/forums/topic/225956-c-how-to-find-the-shortest-path-in-an-adjacency-matrix/
+//http://www.dreamincode.net/forums/topic/225956-c-how-to-find-the-parent-path-in-an-adjacency-matrix/
 //METHOD 2: USING CTOR
 #include <iostream>
 #include <vector>
@@ -106,29 +106,29 @@ void graph::display()
  }
 }
 
-// Function to print shortest path from source to j
+// Function to print parent path from source to j
 // using parent array
-void printPath(vector<int> shortest, int j)
+void printPath(vector<int> parent, int j)
 {
   // Base Case : If j is source
-  if (shortest[j] == -1)
+  if (parent[j] == -1)
     return;
 
-  printPath(shortest, shortest[j]);
+  printPath(parent, parent[j]);
 
   printf("%d ", j);
 }
 
 // A utility function to print the constructed distance
 // array
-void printSolution(vector<int> dist, int n, vector<int> shortest)
+void printSolution(vector<int> dist, int n, vector<int> parent)
 {
   int src = 0;
   printf("Vertex\t  Distance\tPath");
   for (int i = 1; i < n; i++)
   {
     printf("\n%d -> %d \t\t %d\t\t%d ", src, i, dist[i], src);
-    printPath(shortest, i);
+    printPath(parent, i);
   }
   printf("\n");
 }
@@ -148,7 +148,7 @@ int dijkstra(int A, int B, graph t)
   //                               vector<graph>(begin(t.adj[1]), end(t.adj[1]))}; 
   vector<int> dist(t.v, inf);
   vector<bool> vis(t.v, false);
-  vector<int> shortest(t.v, -1);
+  vector<int> parent(t.v, -1);
   // for (int i = 0; i < n; i++)
   //     for (int j = 0; j < n; j++)
   //       // vec.push_back(adj[i][j]);
@@ -176,15 +176,15 @@ int dijkstra(int A, int B, graph t)
       int path = dist[cur] + t.adj[cur][j].distance;
       if (path < dist[j]) {
         dist[j] = path;
-        shortest[j] = cur;  //for shortest path row and col j(row) cur(col)
+        parent[j] = cur;  //for parent path row and col j(row) cur(col)
       }
     }
    }
   for_each(dist.begin(), dist.end(), [](int i) { printf("%d ", i);  });
   printf("\tdist \n");
-  for_each(shortest.begin(), shortest.end(), [](int i) { printf("%d ", i);  });
-  printf("\tshortest vertex \n");
-  printSolution(dist, n, shortest);
+  for_each(parent.begin(), parent.end(), [](int i) { printf("%d ", i);  });
+  printf("\tparent vertex \n");
+  printSolution(dist, n, parent);
   return dist[B];
 }
 int main()
@@ -232,7 +232,7 @@ int main()
       if (!distance)
         printf("Not connected from 0 to %d\n", t.v -1);
       else
-        printf("shortest path %d\n", distance);
+        printf("parent path %d\n", distance);
 
 
   return 0;

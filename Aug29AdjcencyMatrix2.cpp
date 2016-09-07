@@ -1,4 +1,4 @@
-//http://www.dreamincode.net/forums/topic/225956-c-how-to-find-the-shortest-path-in-an-adjacency-matrix/
+//http://www.dreamincode.net/forums/topic/225956-c-how-to-find-the-parent-path-in-an-adjacency-matrix/
 //METHOD 2: USING CTOR
 #include <iostream>
 #include <vector>
@@ -140,29 +140,29 @@ void graph::display()
  }
 }
 
-// Function to print shortest path from source to j
+// Function to print parent path from source to j
 // using parent array
-void printPath(vector<int> shortest, int j)
+void printPath(vector<int> parent, int j)
 {
   // Base Case : If j is source
-  if (shortest[j] == -1)
+  if (parent[j] == -1)
     return;
 
-  printPath(shortest, shortest[j]);
+  printPath(parent, parent[j]);
 
   printf("%d(%s) ", j, vN[j]);
 }
 
 // A utility function to print the constructed distance
 // array
-void printSolution(int src, vector<int> dist, int n, vector<int> shortest)
+void printSolution(int src, vector<int> dist, int n, vector<int> parent)
 {
   // int src = 1;
   printf("Vertex\t\t\t\t           Distance\t\tPath");
   for (int i = 1; i < n; i++)
   {
     printf("\n%d(%s) -> %d (%-11s)\t%d\t\t\t%d(%s) ", src, vN[src], i, vN[i], dist[i], src, vN[src]);
-    printPath(shortest, i);
+    printPath(parent, i);
   }
   printf("\n");
 } 
@@ -175,7 +175,7 @@ int graph::dijkstra(int A, int B, graph::edge **adj)
   int n = sizeof(adj); // n = 8
   vector<int> dist(n, inf);
   vector<bool> vis(n, false);
-  vector<int> shortest(n, -1);
+  vector<int> parent(n, -1);
   
   printf("n = %d from %d(%s) to %d(%s)\n", n, A,vN[A], B, vN[B]);                         
   dist[A] = 0;
@@ -196,15 +196,15 @@ int graph::dijkstra(int A, int B, graph::edge **adj)
       int path = dist[cur] + adj[cur][j].distance;
       if (path < dist[j]) {
         dist[j] = path;
-        shortest[j] = cur;  //for shortest path row and col j(row) cur(col)
+        parent[j] = cur;  //for parent path row and col j(row) cur(col)
       }
     }
    }
   for_each(dist.begin(), dist.end(), [](int i) { printf("%d ", i);  });
   printf("\tdist \n");
-  for_each(shortest.begin(), shortest.end(), [](int i) { printf("%d ", i);  });
-  printf("\t\tshortest vertex \n");
-  printSolution(A, dist, n, shortest);
+  for_each(parent.begin(), parent.end(), [](int i) { printf("%d ", i);  });
+  printf("\t\tparent vertex \n");
+  printSolution(A, dist, n, parent);
   return dist[B];
 }
 int main()
@@ -254,7 +254,7 @@ int main()
      if (!distance)
       printf("Not exist! \n");
      else
-      printf("shortest path %d\n", distance);
+      printf("parent path %d\n", distance);
 
   return 0;
 }
@@ -282,7 +282,7 @@ int main()
 // row 7 : 0  0  5  0  0  0  0  0  
 // n = 8 from 0(Pierre) to 6(Pensacola)
 // 0 2 6 9 10 15 19 24   dist 
-// -1 0 1 2 2 4 5 6    shortest vertex 
+// -1 0 1 2 2 4 5 6    parent vertex 
 // Vertex                   Distance   Path
 // 0(Pierre) -> 1 (Pendleton  )  2     0(Pierre) 1(Pendleton) 
 // 0(Pierre) -> 2 (Phoenix    )  6     0(Pierre) 1(Pendleton) 2(Phoenix) 
@@ -291,6 +291,6 @@ int main()
 // 0(Pierre) -> 5 (Pittsburgh )  15    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 
 // 0(Pierre) -> 6 (Pensacola  )  19    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 6(Pensacola) 
 // 0(Pierre) -> 7 (Princeton  )  24    0(Pierre) 1(Pendleton) 2(Phoenix) 4(Peoria) 5(Pittsburgh) 6(Pensacola) 7(Princeton) 
-// shortest path 19
+// parent path 19
 // Dtor delete adj create in heap using new adj = new edge*[v] 
 // [Finished in 1.0s]
