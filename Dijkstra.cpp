@@ -111,6 +111,11 @@ int main()
     for_each(shortest.begin(), shortest.end(), [](pair<string, int> n){
       cout << n.first << " " << n.second << endl;
     });
+    cout << "-----------" << endl;
+    for_each(begin(shortest), end(shortest), [](const std::pair<string, int> &n){
+        cout << n.first <<" " << n.second << endl;
+    });
+
     return 0;
 }
 
