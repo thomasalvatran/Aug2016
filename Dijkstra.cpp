@@ -1,4 +1,5 @@
 //----------------------/home/tovantran/Ctest/Dijkstra.cpp
+////????Review???? September 09 2016 (Friday)
 #include <iostream>
 #include <queue>
 #include <map>
@@ -79,6 +80,22 @@ struct less_second {
         return a.second < b.second;
     }
 };
+// function<bool(int, int)> lesser () {
+//         return [](int x, int y) { return x < y; };
+//     }
+function<int(int, int)> returnLambda() {
+       return [](int x, int y) { return x * y; };
+}
+
+
+function<void(pair<string, int>)> print1()  //std::function wrap lambda
+{
+   return [](pair<string, int> n) ->void //more 1 line
+   {
+      cout << " print1() std::function outside main " << n.first << " " << n.second << endl; //pair inside
+   };
+}
+
 
 int main()
 {
@@ -131,9 +148,9 @@ int main()
         cout << n.first <<" " << n.second << endl; //pair inside
         });
 
-    cout << "------4-----" << endl;
+    cout << "------4-reverse----" << endl;
     
-    for_each(shortest.begin(), shortest.end(), [](pair<string, int> n){
+    for_each(shortest.rbegin(), shortest.rend(), [](pair<string, int> n){  //reverse
       cout << n.first << " " << n.second << endl; //pair inside
     });
     cout << "------5-----" << endl;
@@ -149,8 +166,8 @@ int main()
     });
 
     cout << "------7-----" << endl;
-    vector<pair<string, int>> mapcopy(shortest.begin(), shortest.end());
-    sort(mapcopy.begin(), mapcopy.end(), less_second<string, int>());
+    vector<pair<string, int>> mapcopy(shortest.begin(), shortest.end()); //copy map to vector
+    sort(mapcopy.begin(), mapcopy.end(), less_second<string, int>());    //sort map without convert to vector
     for (auto n: mapcopy)
     {
         cout << n.first << " " << n.second << endl;
@@ -162,7 +179,18 @@ int main()
       cout << n.first << " " << n.second << endl; //pair inside
     });
 
-   // for_each(mapcopy.begin(), mapcopy.end(), [](pair<string, int>)
+    
+    function<void(pair<string, int>)> print = [](pair<string, int> n){
+      cout << " print std::function inside main " << n.first << " " << n.second << endl; //pair inside
+    };
+
+    for_each(mapcopy.begin(), mapcopy.end(), print);
+    for_each(mapcopy.rbegin(), mapcopy.rend(), print1()); //reverse
+    // for_each(mapcopy.begin(), mapcopy.end(), print2(pair<string, int> n));
+
+    // function<void(string, int)> print = [](string, int){
+    //function<void(string, int)> print = [](string, int){
+      // cout << n.first << " " << n.second << endl; //pair inside
 
     // for_each(mapcopy.begin(), mapcopy.end(), []( int n){
     //     cout << n << endl;
@@ -179,6 +207,7 @@ int main()
     //vector<pair<int, string>> shortest;
     //Sort using vector
     
+    // map has no sort only vector
     // sort(shortest.begin(), shortest.end(), [](const shortest &a, const shortest &b)->bool
     // {
     //     return a.shortest > b.shortest;
